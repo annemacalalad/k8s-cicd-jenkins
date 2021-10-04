@@ -6,22 +6,20 @@ pipeline {
     stages {
         stage("Checkout code") {
             steps {
-                checkout scm
+                checkOut()
             }
         }
         stage("Build image") {
             steps {
                 script {
-                    myapp = docker.build("annemacalalad/nodejs-test:${env.BUILD_ID}")
+                    step.npmBuild()
                 }
             }
         }
         stage("Push image") {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                            myapp.push("latest")
-                            myapp.push("${env.BUILD_ID}")
+                    step.pushImage()
                     }
                 }
             }
